@@ -22,7 +22,7 @@ df_path = os.path.join(os.getcwd(), 'data.csv')
 df = pd.read_csv(df_path)
 
 ## Charger le modèle enregistré
-local_path = r".\modele"
+local_path = os.path.join(os.getcwd(), 'modele')
 model = mlflow.lightgbm.load_model(local_path)
 
 ## Création d'un explainer SHAP

@@ -29,7 +29,7 @@ model = mlflow.lightgbm.load_model(local_path)
 explainer = shap.TreeExplainer(model)
 
 ## Chemin d'accès
-folder = r".\image"
+folder = os.path.join(os.getcwd(), 'image')
 
 ## Préparation des données
 train_df = df[df['TARGET'].notnull()]

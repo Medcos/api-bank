@@ -29,7 +29,7 @@ def hello():
 @app.route('/clients', methods=['GET'])
 def get_clients():
     client_ids = data['SK_ID_CURR'].tolist()
-    return jsonify(client_ids[:1000])
+    return jsonify(client_ids)
 
 if __name__ == '__main__':
     app.run()

@@ -76,6 +76,24 @@ def predict(id):
     prediction = prediction.tolist()[0]
     return jsonify({"prediction": (prediction[1])})
 
+## Faire l'interpretation locale de la prédiction
+@app.route('/interpretation/local/<int:id>', methods=['GET'])
+def get_local_interpretation(id):
+    client_data = X[X['SK_ID_CURR'] == id]
+    client_data = client_data.drop('SK_ID_CURR', axis=1)
+    client_data = client_data.replace([np.inf, -np.inf], 1e9)
+
+    if client_data.empty:
+        return jsonify({"error": "Client pas trouvé"}), 404
+    
+    # Calculer les Shapley
+    shap_values = explainer.shap_values(client_data)
+    # Visualisation de l'importance des fonctionnalités
+    shap.summary_plot(shap_values, client_data, max_display=10, plot_type='bar')
+    # Enregistrer le graphique
+    plt.savefig(f'{folder}/local_interpretation_{id}.png')
+
+    return send_file(f'{folder}/local_interpretation_{id}.png', mimetype='image/png') 
 
 if __name__ == '__main__':
     app.run()

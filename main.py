@@ -95,5 +95,20 @@ def get_local_interpretation(id):
 
     return send_file(f'{folder}/local_interpretation_{id}.png', mimetype='image/png') 
 
+## Faire l'interpretation Global du modèle
+@app.route('/interpretation/global', methods=['GET'])
+def get_global_interpretation():
+    sample_data = X
+    sample_data = sample_data.drop('SK_ID_CURR', axis=1)
+    sample_data = sample_data.replace([np.inf, -np.inf], 1e9)
+
+    shap_values = explainer(sample_data)
+    shap.summary_plot(shap_values, sample_data, max_display =10, plot_type="bar")
+    # Enregistrer le diagramme en tant qu'image
+    plt.savefig(f'{folder}/global_interpretation.png')
+
+    return send_file(f'{folder}/global_interpretation.png', mimetype='image/png')
+
+
 if __name__ == '__main__':
     app.run()

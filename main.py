@@ -30,7 +30,7 @@ model = mlflow.lightgbm.load_model(local_path)
 ## Activer les visualisations interactives de SHAP
 shap.initjs()
 # Création d'un explainer SHAP
-explainer = shap.TreeExplainer(model)
+#explainer = shap.TreeExplainer(model)
 
 ## Chemin d'accès
 folder = os.path.join(os.getcwd(), 'image')
@@ -102,10 +102,6 @@ def get_local_interpretation(id):
     )
     # Obtenir l'explication
     exp = explainer.explain_instance(data_row = client_data.values[0], predict_fn = model.predict_proba)
-
-    # Visualiser l'importance des fonctionnalités avec un graphique à barres horizontales
-    plt.style.use("ggplot")  # Utiliser le style ggplot
-    plt.figure(figsize=(20, 10))
     
     # Extraire les importances
     importances = exp.as_map()[1]  # Récupérer les importances des caractéristiques
@@ -115,6 +111,10 @@ def get_local_interpretation(id):
     sorted_indices = np.argsort([val[1] for val in importances])[-10:]  # Indices des 10 plus importantes
     top_importances = [importances[i] for i in sorted_indices]
     top_feature_names = [feature_names[i] for i in sorted_indices]
+
+    # Visualiser l'importance des fonctionnalités 
+    #plt.style.use("ggplot")  # Utiliser le style ggplot
+    plt.figure(figsize=(20, 10))
     
     # Création du graphique à barres horizontales
     plt.barh(range(10), [val[1] for val in top_importances],
@@ -125,10 +125,10 @@ def get_local_interpretation(id):
     plt.grid(axis='x', linestyle='--', alpha=0.7)  # Ajouter une grille
     
     # Sauvegarder l'image
-    plt.savefig(f'{folder}/local_interpretation_{id}.png')
+    plt.savefig(f'{folder}/local_interpretation_{id}.jpg', dpi = 300)
     plt.close()
 
-    return send_file(f'{folder}/local_interpretation_{id}.png', mimetype='image/png') 
+    return send_file(f'{folder}/local_interpretation_{id}.jpg', mimetype='image/jpg') 
 
 
 ## Faire l'interpretation Global du modèle
@@ -160,7 +160,7 @@ def get_global_interpretation():
     plt.barh(range(10), top_shap_values,
              color=[ "green" for val in top_shap_values])
     plt.yticks(range(10), top_feature_names)
-    plt.title("10 Caractéristiques les plus importantes (SHAP)", fontsize=16)
+    plt.title("10 Caractéristiques les plus importantes", fontsize=16)
     plt.xlabel("Importance (valeurs SHAP)", fontsize=14)
     plt.grid(axis='x', linestyle='--', alpha=0.7)  # Ajouter une grille
 

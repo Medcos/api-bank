@@ -20,31 +20,50 @@ app = Flask(__name__)
 data_path = os.path.join(os.getcwd(), 'info_clients.csv')
 data = pd.read_csv(data_path)
 
-df_path = os.path.join(os.getcwd(), 'data.csv')
+df_path = os.path.join(os.getcwd(), 'data_test.csv')
 df = pd.read_csv(df_path)
 
 ## Charger le modèle enregistré
 local_path = os.path.join(os.getcwd(), 'modele')
 model = mlflow.lightgbm.load_model(local_path)
 
+## Charger le modèlepipeline de preprocessing enregistré
+local_path_pre = os.path.join(os.getcwd(), 'preprocessing')
+preprocessing = mlflow.sklearn.load_model(local_path_pre)
+
 ## Activer les visualisations interactives de SHAP
 shap.initjs()
-# Création d'un explainer SHAP
-#explainer = shap.TreeExplainer(model)
 
 ## Chemin d'accès
 folder = os.path.join(os.getcwd(), 'image')
 
 ## Préparation des données
-train_df = df[df['TARGET'].notnull()]
-test_df = df[df['TARGET'].isnull()]
-# Séparer les caractéristiques et la variable cible
-feats = [f for f in train_df.columns if f not in ['TARGET','SK_ID_BUREAU','SK_ID_PREV','index']]    
-X = train_df[feats]
-# Remplacer les NaN par la moyenne
-X = X.fillna(X.mean())  
+def prepare_data(df):
+ # Remplacer np.inf et -np.inf
+    df.replace({np.inf: 1.e9, -np.inf: -1.e9}, inplace=True)
+    # Séparer les caractéristiques et la variable cible
+    feats = [f for f in df.columns if f not in ['TARGET', 'SK_ID_BUREAU', 'SK_ID_PREV']]
+    X = df[feats]
+    y = df['TARGET']
+    return X, y
+
+X, y = prepare_data(df)
+
+## Prétraitement des données
+ID = X['SK_ID_CURR']
+X = X.drop(columns=['SK_ID_CURR'])
+
+# Appliquer le pipeline sur les données de test
+X_transformed = preprocessing.transform(X)
+# Transformer en dataframe
+X_transformed = pd.DataFrame(X_transformed, columns=X.columns)
+# Ajouter la colonne des identifiants aux données 
+X_transformed.insert(0, 'SK_ID_CURR', ID.values)
+X = X_transformed
+print(X)
 
 sys.stdout.flush()
+
 
 ## Page d'accueil
 @app.route('/', methods=['GET'])
@@ -55,14 +74,14 @@ def hello():
 ## Récupérer les ID des clients à partir de la colonne "id" de la DataFrame
 @app.route('/clients', methods=['GET'])
 def get_clients():
-    client_ids = data['SK_ID_CURR'].tolist()
+    client_ids = X['SK_ID_CURR'].tolist()
     return jsonify(client_ids)
 
 
 ## Afficher les infos importantes sur un client
 @app.route('/client/<int:id>', methods=['GET'])
 def get_client(id):
-    if id in data['SK_ID_CURR'].tolist() :
+    if id in X['SK_ID_CURR'].tolist() :
         clientid = data.loc[data['SK_ID_CURR']== id, : ]
         client = clientid.to_dict('records')
         return jsonify(client)
@@ -75,7 +94,6 @@ def get_client(id):
 def predict(id):
     client_info = X[X['SK_ID_CURR'] == id]
     client_info = client_info.drop('SK_ID_CURR', axis=1)
-    client_info= client_info.replace([np.inf, -np.inf], 1e9)
 
     if client_info.empty:
         return jsonify({"error": "Client pas trouvé"}), 404
@@ -89,7 +107,7 @@ def predict(id):
 def get_local_interpretation(id):
     client_data = X[X['SK_ID_CURR'] == id]
     client_data = client_data.drop('SK_ID_CURR', axis=1)
-    client_data = client_data.replace([np.inf, -np.inf], 1e9)
+    #client_data = client_data.replace([np.inf, -np.inf], 1e9)
 
     if client_data.empty:
         return jsonify({"error": "Client pas trouvé"}), 404

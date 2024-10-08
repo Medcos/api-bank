@@ -2,7 +2,7 @@ flavors:
   lightgbm:
     code: null
     data: model.pkl
-    lgb_version: 4.5.0
+    lgb_version: 4.3.0
     model_class: lightgbm.sklearn.LGBMClassifier
   python_function:
     data: model.pkl
@@ -10,8 +10,8 @@ flavors:
       conda: conda.yaml
       virtualenv: python_env.yaml
     loader_module: mlflow.lightgbm
-    python_version: 3.12.4
-mlflow_version: 2.12.2
-model_size_bytes: 13319977
-model_uuid: 4fed4571067f4181a269741983534703
-utc_time_created: '2024-09-18 13:26:32.926438'
+    python_version: 3.9.12
+mlflow_version: 2.11.3
+model_size_bytes: 13041822
+model_uuid: ebc9341327e047ffa86f4770319caa99
+utc_time_created: '2024-06-04 16:43:08.122650'

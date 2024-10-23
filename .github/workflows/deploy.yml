@@ -2,8 +2,7 @@ name: Deploy Flask API with Tests
 
 on:
   push:
-    branches:
-      - main  # Déclenche le déploiement sur les push vers la branche main
+    branches: [ main ]  # Déclenche le déploiement sur les push vers la branche main
 
 jobs:
   test:
@@ -11,47 +10,17 @@ jobs:
 
     steps:
       - name: Vérifier le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Configurer Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.8'  # Changez cette version si nécessaire
+          python-version: '3.11'  # Changez cette version si nécessaire
 
       - name: Installer les dépendances
-        run: |
+        run: 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Exécuter les tests
-        run: |
-          pytest
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test  # Dépend de l'étape de test
-
-    steps:
-      - name: Vérifier le code
-        uses: actions/checkout@v4
-
-      - name: Configurer Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'  # Changez cette version si nécessaire
-
-      - name: Installer les dépendances
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Déployer sur Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          api-bank: votre-nom-d-app    # Remplacez par le nom de votre application Heroku
-        run: |
-          echo "Déploiement sur Heroku..."
-          git remote add heroku https://git.heroku.com/${{ env.api-bank }}.git
-          git add .
-          git commit -m "Déploiement automatique"
-          git push heroku main --force
+        run: pytest

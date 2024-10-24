@@ -2,7 +2,7 @@ name: Deploy Flask API with Tests
 
 env:
   HEROKU_APP_NAME: api-bank               # nom de votre application Heroku
-  PYTHON_VERSION: '3.8'                   # version de Python à utiliser
+  PYTHON_VERSION: '3.10'                   # version de Python à utiliser
 
 on:
   push:

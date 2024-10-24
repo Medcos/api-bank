@@ -56,7 +56,7 @@ jobs:
           path: .
 
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.8.
+        uses: akhileshns/heroku-deploy@v3.12.8
         with:
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}

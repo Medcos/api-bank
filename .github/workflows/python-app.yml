@@ -4,7 +4,7 @@
 name: Python application
 
 env:
-  HEROKU_APP_NAME: api-bank               # nom de votre application Heroku
+  HEROKU_APP_NAME: api-banque               # nom de votre application Heroku
   PYTHON_VERSION: '3.10'                   # version de Python à utiliser
 
 on:
@@ -56,7 +56,7 @@ jobs:
     - name: Deploy to Heroku
       uses: akhileshns/heroku-deploy@v3.13.15
       with:
-        heroku_app_name: api-bank
+        heroku_app_name: api-banque
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         branch: HEAD
         dontuseforce: true

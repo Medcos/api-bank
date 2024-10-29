@@ -159,7 +159,7 @@ def get_global_interpretation():
     feature_names = X.columns[1:]  # Obtenir les noms des caractéristiques
     shap_values_mean = np.mean(np.abs(shap_values.values), axis=0)
 
-    # Trier et obtenir les 10 caractéristiques les plus importantes
+    # Trier et obtenir les dix(10) caractéristiques les plus importantes
     sorted_indices = np.argsort(shap_values_mean)[-10:]
     top_feature_names = feature_names[sorted_indices]
     top_shap_values = shap_values_mean[sorted_indices]

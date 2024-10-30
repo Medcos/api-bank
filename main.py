@@ -19,9 +19,11 @@ app = Flask(__name__)
 ## Importer les données
 df_path = os.path.join(os.getcwd(), 'info_clients.csv')
 df = pd.read_csv(df_path)
+print('df :', df)
 
 data_path = os.path.join(os.getcwd(), 'data.csv')
 data = pd.read_csv(data_path)
+print('data :', data)
 
 ## Charger le modèle enregistré
 local_path = os.path.join(os.getcwd(), 'modele')
@@ -39,6 +41,9 @@ folder = os.path.join(os.getcwd(), 'image')
 
 ## Préparation des données
 test_df = data[data['TARGET'].isnull()]
+print('test_df', test_df)
+print("Colonnes disponibles :", test_df.columns.tolist())
+
 # Séparer les caractéristiques et la variable cible
 feats = [f for f in test_df.columns if f not in ['TARGET']]    
 X_test = test_df[feats]

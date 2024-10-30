@@ -17,11 +17,11 @@ app = Flask(__name__)
 
 
 ## Importer les données
-data_path = os.path.join(os.getcwd(), 'info_clients.csv')
-data = pd.read_csv(data_path)
-
-df_path = os.path.join(os.getcwd(), 'data.csv')
+df_path = os.path.join(os.getcwd(), 'info_clients.csv')
 df = pd.read_csv(df_path)
+
+data_path = os.path.join(os.getcwd(), 'data.csv')
+data = pd.read_csv(data_path)
 
 ## Charger le modèle enregistré
 local_path = os.path.join(os.getcwd(), 'modele')
@@ -38,7 +38,7 @@ shap.initjs()
 folder = os.path.join(os.getcwd(), 'image')
 
 ## Préparation des données
-test_df = df[df['TARGET'].isnull()]
+test_df = data[data['TARGET'].isnull()]
 # Séparer les caractéristiques et la variable cible
 feats = [f for f in test_df.columns if f not in ['TARGET']]    
 X_test = test_df[feats]
@@ -66,15 +66,15 @@ def hello():
 ## Récupérer les ID des clients à partir de la colonne "id" de la DataFrame
 @app.route('/clients', methods=['GET'])
 def get_clients():
-    client_ids = data['SK_ID_CURR'].tolist()
+    client_ids = df['SK_ID_CURR'].tolist()
     return jsonify(client_ids)
 
 
 ## Afficher les infos importantes sur un client
 @app.route('/client/<int:id>', methods=['GET'])
 def get_client(id):
-    if id in data['SK_ID_CURR'].tolist() :
-        clientid = data.loc[data['SK_ID_CURR']== id, : ]
+    if id in df['SK_ID_CURR'].tolist() :
+        clientid = df.loc[df['SK_ID_CURR']== id, : ]
         client = clientid.to_dict('records')
         return jsonify(client)
     else:   

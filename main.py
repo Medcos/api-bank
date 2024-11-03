@@ -21,7 +21,7 @@ df_path = os.path.join(os.getcwd(), 'info_clients.csv')
 df = pd.read_csv(df_path)
 print('df :', df)
 
-data_path = os.path.join(os.getcwd(), 'data.csv')
+data_path = os.path.join(os.getcwd(), 'data_test.csv')
 data = pd.read_csv(data_path)
 print('data :', data)
 

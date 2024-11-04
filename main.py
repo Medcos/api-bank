@@ -43,7 +43,9 @@ sys.stdout.flush()
 ## Page d'accueil
 @app.route('/', methods=['GET'])
 def hello():
-    return " Bienvenue à la société financière, nommée 'Prêt à dépenser'"
+    #return " Bienvenue à la société financière, nommée 'Prêt à dépenser'"
+    client_ids = df['SK_ID_CURR'].tolist()
+    return jsonify(client_ids)
 
 
 ## Récupérer les ID des clients à partir de la colonne "id" de la DataFrame

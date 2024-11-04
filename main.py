@@ -53,6 +53,13 @@ def get_clients():
     client_ids = df['SK_ID_CURR'].tolist()
     return jsonify(client_ids)
 
+@app.route('/client', methods=['GET'])
+def process_data():
+    df = pd.read_csv('data.csv')
+    print(df.columns)  # Ajoutez cette ligne pour vérifier les colonnes
+    client_ids = df['SK_ID_CURR'].tolist()
+    print(client_ids[:5])  # Affichez quelques IDs pour vérifier
+
 
 if __name__ == '__main__':
     app.run()

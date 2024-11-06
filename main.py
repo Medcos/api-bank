@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 ## Importer les données
 df_path = os.path.join(os.getcwd(), 'info_clients.csv')
-df_test = pd.read_csv(df_path)
+df = pd.read_csv(df_path)
 #df = pd.read_csv('info_clients.csv')
 
 #data_path = os.path.join(os.getcwd(), 'data_test.csv')
@@ -39,14 +39,11 @@ folder = os.path.join(os.getcwd(), 'image')
 
 sys.stdout.flush()
 
-# ## Page d'accueil
-# @app.route('/', methods=['GET'])
-# def hello():
-#     print('data :', data)
-#     print('df :', df)
-#     print('df_test :', df_test)
-#     print('df_path :', df_path)
-#     return " Bienvenue à la société financière, nommée 'Prêt à dépenser'"
+## Page d'accueil
+@app.route('/', methods=['GET'])
+def hello():
+    print('info_clients :', df)
+    return " Bienvenue à la société financière, nommée 'Prêt à dépenser'"
 
 
 

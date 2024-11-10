@@ -42,6 +42,10 @@ folder = os.path.join(os.getcwd(), 'image')
 ## Préparation des données
 # test_df = data[data['TARGET'].isnull()]
 # print('test_df', test_df)
+ # Remplacer np.inf et -np.inf
+test_df.replace({np.inf: 1.e9, -np.inf: -1.e9}, inplace=True)
+
+
 # print("Colonnes disponibles :", test_df.columns.tolist())
 
 # Séparer les caractéristiques et la variable cible
